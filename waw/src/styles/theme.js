@@ -1,4 +1,4 @@
-const color = {
+const theme = {
   main_yellow: '#FFF384',
   light_yellow: '#fffbdc',
   basic_line: '#A0A0A0',
@@ -8,4 +8,4 @@ const color = {
   liked_red: '#FD0000',
 };
 
-export default color;
+export default theme;
