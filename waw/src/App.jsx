@@ -1,14 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Reset } from 'styled-reset';
+
 import NavigationBar from './components/NavigationBar';
+import Login from './pages/login';
 
 function App() {
   return (
     <>
+      <Reset />
       <Router>
         <NavigationBar />
         <Routes>
           <Route path="/" />
-          <Route path="/login" />
+          <Route path="/login" element={<Login />} />
           <Route path="/join" />
           <Route path="/main" />
           <Route path="/search" />
