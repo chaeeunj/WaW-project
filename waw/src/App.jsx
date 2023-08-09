@@ -3,6 +3,7 @@ import { Reset } from 'styled-reset';
 
 import NavigationBar from './components/NavigationBar';
 import Login from './pages/login';
+import Test from './pages/Test';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
+          <Route path="test" element={<Test />} />
           <Route path="/" />
           <Route path="/login" element={<Login />} />
           <Route path="/join" />
