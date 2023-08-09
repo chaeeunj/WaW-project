@@ -12,7 +12,7 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
-          <Route path="test" element={<Test />} />
+          <Route path="/test" element={<Test />} />
           <Route path="/" />
           <Route path="/login" element={<Login />} />
           <Route path="/join" />

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import TextButton from './Btn/TextButton';
+import TextButton from './Buttons/TextButton';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
