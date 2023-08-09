@@ -6,7 +6,7 @@ import theme from '../../styles/theme';
 function Button({ name, onClick, bgColor, color, fontSize }) {
   return (
     <ThemeProvider theme={theme}>
-      <StyledButton onClick={onClick} bgColor={bgColor} color={color}>
+      <StyledButton onClick={onClick} bgColor={bgColor} color={color} fontSize={fontSize}>
         {name}
       </StyledButton>
     </ThemeProvider>
