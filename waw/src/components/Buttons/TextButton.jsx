@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 
 import theme from '../../styles/theme';
 
-function TextButton({ name, onClick, color, fontSize, fontWeight }) {
+function TextButton({ name, onClick, color, fontSize, fontWeight, margin }) {
   return (
     <ThemeProvider theme={theme}>
       <StyledTextButton
         onClick={onClick}
         color={color}
         fontSize={fontSize}
-        fontWeight={fontWeight}>
+        fontWeight={fontWeight}
+        margin={margin}>
         {name}
       </StyledTextButton>
     </ThemeProvider>
@@ -23,6 +24,7 @@ TextButton.propTypes = {
   color: PropTypes.string.isRequired,
   fontSize: PropTypes.string.isRequired,
   fontWeight: PropTypes.number.isRequired,
+  margin: PropTypes.string.isRequired,
 };
 
 export default TextButton;
@@ -30,6 +32,9 @@ export default TextButton;
 const StyledTextButton = styled.span`
   color: ${(props) => props.color};
   font-size: ${(props) => props.fontSize};
-  font-weight: ${(props) => props.fontWeight};
+  font-weight: ${(props) => props.fontWeight || 400};
+  margin: ${(props) => props.margin || '0'};
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 `;
