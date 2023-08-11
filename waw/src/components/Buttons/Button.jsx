@@ -3,7 +3,15 @@ import PropTypes from 'prop-types';
 
 import theme from '../../styles/theme';
 
-function Button({ name, onClick, bgColor, color, fontSize, paddingLR }) {
+function Button({
+  name,
+  onClick,
+  bgColor,
+  color,
+  fontSize,
+  padding,
+  borderRadius,
+}) {
   return (
     <ThemeProvider theme={theme}>
       <StyledButton
@@ -11,7 +19,8 @@ function Button({ name, onClick, bgColor, color, fontSize, paddingLR }) {
         bgColor={bgColor}
         color={color}
         fontSize={fontSize}
-        paddingLR={paddingLR}>
+        padding={padding}
+        borderRadius={borderRadius}>
         {name}
       </StyledButton>
     </ThemeProvider>
@@ -24,17 +33,20 @@ Button.propTypes = {
   bgColor: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   fontSize: PropTypes.string.isRequired,
-  paddingLR: PropTypes.string.isRequired,
+  padding: PropTypes.string.isRequired,
+  margin: PropTypes.string.isRequired,
+  borderRadius: PropTypes.string.isRequired,
 };
 
 export default Button;
 
 const StyledButton = styled.button`
   border: none;
-  background-color: ${(props) => props.bgColor};
-  color: ${(props) => props.color};
+  background-color: ${(props) => props.bgColor || props.theme.main_yellow};
+  color: ${(props) => props.color || props.theme.main_text};
   font-size: ${(props) => props.fontSize};
-  font-weight: ${(props) => props.fontWeight};
-  padding: 10px ${(props) => props.paddingLR};
+  font-weight: ${(props) => props.fontWeight || 0};
+  padding: ${(props) => props.padding};
+  border-radius: ${(props) => props.borderRadius || '0'};
   cursor: pointer;
 `;
