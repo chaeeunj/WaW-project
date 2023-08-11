@@ -16,35 +16,44 @@ function NavigationBar() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Wrapper>
-        {/* {userData.displayName && ( */}
-        <SearchImg
-          src="/search.png"
-          onClick={() => onclickTextBtn('/search')}></SearchImg>
-        {/* )} */}
-        <LogoWrapper>
-          <TextButton
-            name={'WaW'}
-            onClick={() => onclickTextBtn('/main')}
-            color={theme.point_blue}
-            fontSize={'20px'}
-            fontWeight={600}
-          />
-        </LogoWrapper>
-
-        {/* {userData.displayName && ( */}
-        <UserInfo>
-          <UserName>{userData}님</UserName>
-          <TextButton
-            name={'마이페이지'}
-            onClick={() => onclickTextBtn('/mypage')}
-            color={theme.main_text}
-            fontSize={'15px'}
-            fontWeight={400}
-          />
-        </UserInfo>
-        {/* )} */}
-      </Wrapper>
+      {userData.displayName ? (
+        <Wrapper>
+          <SearchImg
+            src="/search.png"
+            onClick={() => onclickTextBtn('/search')}></SearchImg>
+          <LogoWrapper>
+            <TextButton
+              name={'WaW'}
+              onClick={() => onclickTextBtn('/main')}
+              color={theme.point_blue}
+              fontSize={'20px'}
+              fontWeight={600}
+            />
+          </LogoWrapper>
+          <UserInfo>
+            <UserName>{userData}님</UserName>
+            <TextButton
+              name={'마이페이지'}
+              onClick={() => onclickTextBtn('/mypage')}
+              color={theme.main_text}
+              fontSize={'15px'}
+              fontWeight={400}
+            />
+          </UserInfo>
+        </Wrapper>
+      ) : (
+        <Wrapper>
+          <LogoWrapper>
+            <TextButton
+              name={'WaW'}
+              onClick={() => onclickTextBtn('/main')}
+              color={theme.point_blue}
+              fontSize={'20px'}
+              fontWeight={600}
+            />
+          </LogoWrapper>
+        </Wrapper>
+      )}
     </ThemeProvider>
   );
 }
@@ -66,7 +75,10 @@ const SearchImg = styled.img`
   cursor: pointer;
 `;
 
-const LogoWrapper = styled.div``;
+const LogoWrapper = styled.div`
+  display: flex;
+  margin: 0 auto;
+`;
 
 const UserInfo = styled.div`
   position: relative;
