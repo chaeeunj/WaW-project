@@ -1,14 +1,21 @@
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { UserDataAtom } from '../recoil/UserDataAtom';
-import TextButton from './Buttons/TextButton';
+import { useRecoilState } from 'recoil';
+import { UserNameAtom } from '../recoil/UserNameAtom';
+import { auth } from '../services/login';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
+import TextButton from './Buttons/TextButton';
+
 function NavigationBar() {
+  const [userName, setUserName] = useRecoilState(UserNameAtom);
   const navigate = useNavigate();
 
-  const userData = useRecoilValue(UserDataAtom);
+  const user = auth.currentUser;
+  const name = user.displayName;
+  setUserName(name);
+
+  console.log(userName);
 
   const onclickTextBtn = (page) => {
     navigate(page);
@@ -16,7 +23,7 @@ function NavigationBar() {
 
   return (
     <ThemeProvider theme={theme}>
-      {userData.displayName ? (
+      {userName ? (
         <Wrapper>
           <SearchImg
             src="/search.png"
@@ -31,7 +38,7 @@ function NavigationBar() {
             />
           </LogoWrapper>
           <UserInfo>
-            <UserName>{userData}님</UserName>
+            <UserName>{userName}님</UserName>
             <TextButton
               name={'마이페이지'}
               onClick={() => onclickTextBtn('/mypage')}
@@ -63,20 +70,20 @@ export default NavigationBar;
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
   padding: 16px 0;
   background-color: ${({ theme }) => theme.main_yellow};
 `;
 
 const SearchImg = styled.img`
-  position: relative;
-  left: 16px;
+  margin-left: 16px;
   color: ${({ theme }) => theme.main_text};
   cursor: pointer;
 `;
 
 const LogoWrapper = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
 `;
 
