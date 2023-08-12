@@ -9,6 +9,7 @@ function Button({
   bgColor,
   color,
   fontSize,
+  fontWeight,
   padding,
   borderRadius,
 }) {
@@ -19,6 +20,7 @@ function Button({
         bgColor={bgColor}
         color={color}
         fontSize={fontSize}
+        fontWeight={fontWeight}
         padding={padding}
         borderRadius={borderRadius}>
         {name}
@@ -33,6 +35,7 @@ Button.propTypes = {
   bgColor: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   fontSize: PropTypes.string.isRequired,
+  fontWeight: PropTypes.string.isRequired,
   padding: PropTypes.string.isRequired,
   margin: PropTypes.string.isRequired,
   borderRadius: PropTypes.string.isRequired,
@@ -45,7 +48,7 @@ const StyledButton = styled.button`
   background-color: ${(props) => props.bgColor || props.theme.main_yellow};
   color: ${(props) => props.color || props.theme.main_text};
   font-size: ${(props) => props.fontSize};
-  font-weight: ${(props) => props.fontWeight || 0};
+  font-weight: ${(props) => props.fontWeight || 400};
   padding: ${(props) => props.padding};
   border-radius: ${(props) => props.borderRadius || '0'};
   cursor: pointer;
