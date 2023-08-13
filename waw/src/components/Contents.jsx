@@ -1,17 +1,28 @@
-import styled, { ThemeProvider } from 'styled-components';
-
-import theme from '../styles/theme';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import styled, { ThemeProvider } from 'styled-components';
+import theme from '../styles/theme';
+import { useRecoilValue } from 'recoil';
+import { MoviesDataAtom } from '../recoil/MoviesDataAtom';
 
-function Contents({ firstGroupedData }) {
+const API_IMG = 'https://image.tmdb.org/t/p/w500/';
+
+function Contents({ data, category }) {
+  // const movies = useRecoilValue(MoviesDataAtom);
+
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
         <CardWrapper>
-          {firstGroupedData && (
-            <ContentsCard>
-              <Img src={firstGroupedData.image} alt={firstGroupedData.title} />
-              <Title>{firstGroupedData.title}</Title>
+          {data && category === 'movie' ? (
+            <ContentsCard to={`/${category}/${data.id}`}>
+              <Img src={API_IMG + data.poster_path} alt={data.title} />
+              <Title>{data.title}</Title>
+            </ContentsCard>
+          ) : (
+            <ContentsCard to={`/${category}/${data.id}`}>
+              <Img src={API_IMG + data.poster_path} alt={data.name} />
+              <Title>{data.name}</Title>
             </ContentsCard>
           )}
         </CardWrapper>
@@ -21,7 +32,8 @@ function Contents({ firstGroupedData }) {
 }
 
 Contents.propTypes = {
-  firstGroupedData: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
+  category: PropTypes.string.isRequired,
 };
 
 export default Contents;
@@ -29,7 +41,6 @@ export default Contents;
 const Wrapper = styled.div`
   width: 1175px;
   height: 100%;
-  margin: 50px auto;
 `;
 
 const CardWrapper = styled.div`
@@ -40,9 +51,9 @@ const CardWrapper = styled.div`
   margin: 30px 0;
 `;
 
-const ContentsCard = styled.div`
-  /* height: 270px; */
+const ContentsCard = styled(Link)`
   margin-right: 55px;
+  text-decoration: none;
 `;
 
 const Img = styled.img`
@@ -51,6 +62,10 @@ const Img = styled.img`
 `;
 
 const Title = styled.h1`
+  width: 175px;
   color: ${({ theme }) => theme.contents_title};
   font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
