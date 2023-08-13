@@ -1,21 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { UserNameAtom } from '../recoil/UserNameAtom';
-import { auth } from '../services/login';
+import { useRecoilValue } from 'recoil';
+import { UserDataAtom } from '../recoil/UserDataAtom';
+import { IsMainPageAtom } from '../recoil/IsMainPageAtom';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
 import TextButton from './Buttons/TextButton';
 
 function NavigationBar() {
-  const [userName, setUserName] = useRecoilState(UserNameAtom);
+  const userData = useRecoilValue(UserDataAtom);
+  const isMainPage = useRecoilValue(IsMainPageAtom);
   const navigate = useNavigate();
-
-  const user = auth.currentUser;
-  const name = user.displayName;
-  setUserName(name);
-
-  console.log(userName);
 
   const onclickTextBtn = (page) => {
     navigate(page);
@@ -23,7 +18,7 @@ function NavigationBar() {
 
   return (
     <ThemeProvider theme={theme}>
-      {userName ? (
+      {isMainPage ? (
         <Wrapper>
           <SearchImg
             src="/search.png"
@@ -38,7 +33,7 @@ function NavigationBar() {
             />
           </LogoWrapper>
           <UserInfo>
-            <UserName>{userName}님</UserName>
+            <UserName>{userData.name}님</UserName>
             <TextButton
               name={'마이페이지'}
               onClick={() => onclickTextBtn('/mypage')}
