@@ -1,18 +1,47 @@
-import styled, { ThemeProvider } from 'styled-components';
+import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { UserDataAtom } from '../recoil/UserDataAtom';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import styled, { ThemeProvider } from 'styled-components';
 
 import theme from '../styles/theme';
 import Button from '../components/Buttons/Button';
 
 function Join() {
+  const [userData, setUserData] = useRecoilState(UserDataAtom);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [checkPassword, setCheckPassword] = useState('');
+  // const [samePassword, setSamePassword] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
+
+  const register = async () => {
+    const auth = getAuth();
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(user);
+
+      setUserData({
+        name: name,
+        email: email,
+        password: password,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const onclickJoinButton = (page) => {
+    register();
     alert('회원가입이 완료되었습니다. 로그인 후 이용해주세요.');
     navigate(page);
   };
-
-  // const handleGoogleLogin = () => {};
 
   return (
     <ThemeProvider theme={theme}>
@@ -21,11 +50,37 @@ function Join() {
         <Line></Line>
         <JoinWrapper>
           <UserInput>
-            <StyledInput type="text" placeholder="이름" />
-            <StyledInput type="email" placeholder="이메일 주소" />
-            <StyledInput type="password" placeholder="비밀번호" />
-            <StyledInput type="password" placeholder="비밀번호 확인" />
+            <StyledInput
+              type="text"
+              placeholder="이름"
+              onChange={(e) => setName(e.target.value)}
+            />
+            <StyledInput
+              type="email"
+              placeholder="이메일 주소"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <StyledInput
+              type="password"
+              placeholder="비밀번호"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <StyledInput
+              type="password"
+              placeholder="비밀번호 확인"
+              onChange={(e) => setCheckPassword(e.target.value)}
+            />
           </UserInput>
+          {email.includes('@') ? (
+            ''
+          ) : (
+            <CheckMessage>잘못된 이메일 주소입니다</CheckMessage>
+          )}
+          {password === checkPassword ? (
+            ''
+          ) : (
+            <CheckMessage>비밀번호를 확인해주세요</CheckMessage>
+          )}
           <Button
             name={'회원가입'}
             onClick={() => onclickJoinButton('/login')}
@@ -99,4 +154,10 @@ const StyledInput = styled.input`
   height: 27px;
   background-color: ${({ theme }) => theme.light_yellow};
   border: none;
+`;
+
+const CheckMessage = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.point_blue};
+  margin-bottom: 10px;
 `;
