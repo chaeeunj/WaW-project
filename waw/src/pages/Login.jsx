@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataAtom } from '../recoil/UserDataAtom';
@@ -22,10 +21,6 @@ function Login() {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
 
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider(); // provider 구글 설정
