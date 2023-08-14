@@ -20,7 +20,6 @@ function Phrases() {
 export default Phrases;
 
 const Wrapper = styled.div`
-  margin-top: 10%;
   text-align: center;
 `;
 
