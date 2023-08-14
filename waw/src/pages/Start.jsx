@@ -14,7 +14,10 @@ function Start() {
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
-        <Phrases />
+        <PhrasesWrpper>
+          <Phrases />
+        </PhrasesWrpper>
+
         <ButtonWrapper>
           <Button
             name={'기록 시작하기'}
@@ -34,6 +37,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const PhrasesWrpper = styled.div`
+  margin-top: 180px;
 `;
 
 const ButtonWrapper = styled.div`
