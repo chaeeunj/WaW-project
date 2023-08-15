@@ -37,6 +37,7 @@ function Login() {
     signInWithPopup(auth, provider) // 팝업창 띄워서 로그인
       .then((data) => {
         console.log(data);
+        setIsMainPage(true);
         navigate('/main');
       })
       .catch((err) => {
@@ -51,20 +52,20 @@ function Login() {
         loginEmail,
         loginPassword
       );
-      console.log(user);
-      setUserData({
-        ...userData,
-        email: loginEmail,
-        password: loginPassword,
-      });
-      // userData.email === loginEmail && userData.password === loginPassword
     } catch (error) {
       console.log(error.message);
     }
   };
 
   const onclickLoginButton = (page) => {
+    const userName = auth.currentUser.displayName;
     login();
+
+    setUserData({
+      name: userName,
+      email: loginEmail,
+      password: loginPassword,
+    });
     setIsMainPage(true);
     navigate(page);
   };
@@ -73,6 +74,7 @@ function Login() {
     navigate(page);
   };
 
+  console.log(userData);
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
