@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserDataAtom } from '../recoil/UserDataAtom';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
 import styled, { ThemeProvider } from 'styled-components';
 
 import theme from '../styles/theme';
@@ -19,12 +23,18 @@ function Join() {
 
   useEffect(() => {
     console.log(userData);
+    // localStorage.setItem('userName', name);
   }, [userData]);
 
   const register = async () => {
     const auth = getAuth();
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
       console.log(user);
 
       setUserData({
@@ -32,15 +42,27 @@ function Join() {
         email: email,
         password: password,
       });
+
+      if (user) {
+        await updateProfile(user, {
+          displayName: name,
+        });
+      } else {
+        console.log('User is undefined.');
+      }
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const onclickJoinButton = (page) => {
-    register();
-    alert('회원가입이 완료되었습니다. 로그인 후 이용해주세요.');
-    navigate(page);
+  const onclickJoinButton = async (page) => {
+    try {
+      await register();
+      alert('회원가입이 완료되었습니다. 로그인 후 이용해주세요.');
+      navigate(page);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
