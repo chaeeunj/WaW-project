@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -24,19 +25,21 @@ function Login() {
 
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider(); // provider 구글 설정
-    const user = auth.currentUser;
-    const name = user.displayName;
-    const email = user.email;
-
-    setUserData({
-      name: name,
-      email: email,
-      password: '',
-    });
 
     signInWithPopup(auth, provider) // 팝업창 띄워서 로그인
       .then((data) => {
-        console.log(data);
+        const user = data.user;
+        const name = user.displayName;
+        const email = user.email;
+        const password = user.password;
+
+        setUserData({
+          name: name,
+          email: email,
+          password: password,
+        });
+
+        localStorage.setItem('userName', name);
         setIsMainPage(true);
         navigate('/main');
       })
@@ -47,7 +50,7 @@ function Login() {
 
   const login = async () => {
     try {
-      const user = await signInWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         loginEmail,
         loginPassword
@@ -57,15 +60,31 @@ function Login() {
     }
   };
 
-  const onclickLoginButton = (page) => {
-    const userName = auth.currentUser.displayName;
-    login();
+  const onclickLoginButton = async (page) => {
+    try {
+      await login();
 
-    setUserData({
-      name: userName,
-      email: loginEmail,
-      password: loginPassword,
-    });
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          const userName = user.displayName;
+          localStorage.setItem('userName', userName);
+          setUserData({
+            name: userName,
+            email: loginEmail,
+            password: loginPassword,
+          });
+        } else {
+          // User is signed out
+          // ...
+        }
+      });
+
+      console.log(userData);
+    } catch (error) {
+      console.log(error.message);
+    }
+
     setIsMainPage(true);
     navigate(page);
   };
@@ -74,7 +93,6 @@ function Login() {
     navigate(page);
   };
 
-  console.log(userData);
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
