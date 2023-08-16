@@ -40,13 +40,12 @@ function Main() {
       );
       const jsonData = await response.json();
       const data = jsonData.results;
-      const daramaData = data.filter((drama) => drama.genre_ids[0] === 18);
-      setDramas(daramaData);
+      // const daramaData = data.filter((drama) => drama.genre_ids[0] === 18);
+      setDramas(data);
     } catch (error) {
       console.log('Error fetching data:', error);
     }
   };
-  console.log(dramas);
 
   const onclickAllContentsButton = (page) => {
     navigate(page);
