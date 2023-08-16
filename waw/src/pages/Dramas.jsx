@@ -17,7 +17,7 @@ function Movies() {
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
-        <PageTitle>드라마</PageTitle>
+        <PageTitle>TV, 드라마</PageTitle>
         <AllDramas>
           <DramaCard>
             {dramas.map((drama) => (
@@ -42,7 +42,7 @@ const Wrapper = styled.div`
 
 const PageTitle = styled.h1`
   position: relative;
-  left: -560px;
+  left: -530px;
   font-size: 22px;
   font-weight: 600;
   color: ${({ theme }) => theme.point_blue};
