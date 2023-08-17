@@ -59,6 +59,9 @@ function Main() {
         <PhrasesWrpper>
           <Phrases />
         </PhrasesWrpper>
+        <StyledP>
+          지금 인기있는 <Point>영화</Point>
+        </StyledP>
         <AllContents>
           <TextButton
             name={'전체보기 >'}
@@ -71,6 +74,9 @@ function Main() {
             <Contents key={movie.id} data={movie} category={'movie'} />
           ))}
         </div>
+        <StyledP>
+          지금 인기있는 <Point>TV</Point>
+        </StyledP>
         <AllContents>
           <TextButton
             name={'전체보기 >'}
@@ -113,4 +119,17 @@ const PhrasesWrpper = styled.div`
 const AllContents = styled.div`
   margin-left: 935px;
   margin-top: 10px;
+`;
+
+const StyledP = styled.p`
+  position: relative;
+  left: -510px;
+  font-size: 18px;
+  color: ${({ theme }) => theme.main_text};
+  margin-top: 20px;
+`;
+
+const Point = styled.span`
+  font-weight: 600;
+  color: ${({ theme }) => theme.point_blue};
 `;
