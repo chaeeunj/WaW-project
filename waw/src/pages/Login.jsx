@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { UserDataAtom } from '../recoil/UserDataAtom';
-import { IsMainPageAtom } from '../recoil/IsMainPageAtom';
+import { IsLoginAtom } from '../recoil/IsLoginAtom';
 import { auth } from '../services/login';
 import {
   GoogleAuthProvider,
@@ -14,14 +15,18 @@ import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 import Button from '../components/Buttons/Button';
 import TextButton from '../components/Buttons/TextButton';
-import { useState } from 'react';
 
 function Login() {
   const [userData, setUserData] = useRecoilState(UserDataAtom);
-  const setIsMainPage = useSetRecoilState(IsMainPageAtom);
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
+
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(isLogin);
+  }, [setIsLogin]);
 
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider(); // provider 구글 설정
@@ -39,8 +44,9 @@ function Login() {
           password: password,
         });
 
-        localStorage.setItem('userName', name);
-        setIsMainPage(true);
+        setIsLogin(true);
+        localStorage.setItem('isLogin', isLogin);
+        localStorage.setItem('userName', userData.name);
         navigate('/main');
       })
       .catch((err) => {
@@ -63,12 +69,13 @@ function Login() {
   const onclickLoginButton = async (page) => {
     try {
       await login();
+      setIsLogin(true);
 
       onAuthStateChanged(auth, (user) => {
         if (user) {
           const uid = user.uid;
           const userName = user.displayName;
-          localStorage.setItem('userName', userName);
+
           setUserData({
             name: userName,
             email: loginEmail,
@@ -84,8 +91,8 @@ function Login() {
     } catch (error) {
       console.log(error.message);
     }
-
-    setIsMainPage(true);
+    localStorage.setItem('isLogin', isLogin);
+    localStorage.setItem('userName', userData.name);
     navigate(page);
   };
 

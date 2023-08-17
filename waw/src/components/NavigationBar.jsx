@@ -1,16 +1,24 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserDataAtom } from '../recoil/UserDataAtom';
-import { IsMainPageAtom } from '../recoil/IsMainPageAtom';
+import { IsLoginAtom } from '../recoil/IsLoginAtom';
+import { auth } from '../services/login';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
 import TextButton from './Buttons/TextButton';
 
 function NavigationBar() {
-  const userData = useRecoilValue(UserDataAtom);
-  const isMainPage = useRecoilValue(IsMainPageAtom);
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
+  const [userData, setUserData] = useRecoilState(UserDataAtom);
   const navigate = useNavigate();
+
+  const storedIsLogin = localStorage.getItem('isLogin');
+  const storedUserName = localStorage.getItem('userName');
+
+  const user = auth.currentUser;
+  console.log(user);
 
   const onclickTextBtn = (page) => {
     navigate(page);
@@ -18,7 +26,7 @@ function NavigationBar() {
 
   return (
     <ThemeProvider theme={theme}>
-      {isMainPage ? (
+      {storedIsLogin ? (
         <Wrapper>
           <SearchImg
             src="/search.png"
@@ -33,7 +41,7 @@ function NavigationBar() {
             />
           </LogoWrapper>
           <UserInfo>
-            <UserName>{userData.name}님</UserName>
+            <UserName>{storedUserName}님</UserName>
             <TextButton
               name={'마이페이지'}
               onClick={() => onclickTextBtn('/mypage')}
