@@ -55,10 +55,10 @@ const PaginationWrapper = styled.ul`
 `;
 
 const PageItem = styled.li`
-  padding: 5px 10px;
+  padding: 10px 10px;
   background-color: ${({ active, theme }) =>
     active ? theme.main_yellow : 'transparent'};
-  border-radius: 50%;
+  border-radius: 20px;
   cursor: pointer;
 
   &:hover {
