@@ -1,18 +1,37 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MoviesDataAtom } from '../recoil/MoviesDataAtom';
 import { useRecoilState } from 'recoil';
-// import { Pagination } from '@mui/material';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
 import Contents from '../components/Contents';
+import Pagination from '../components/Pagination';
 
 function Movies() {
   const [movies, setMovies] = useRecoilState(MoviesDataAtom);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 20;
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const fetchDataForPage = async (currentPage) => {
+    try {
+      // 각 페이지에 맞는 API 주소 생성
+      const apiURL = `https://api.themoviedb.org/3/movie/popular?api_key=7a170163b1751c8516b4112e0a10f71d&language=ko-KR&region=krhttps://api.themoviedb.org/3/movie/popular?api_key=7a170163b1751c8516b4112e0a10f71d&language=ko-KR&region=kr&page=${currentPage}`;
+      const response = await fetch(apiURL);
+      const data = await response.json();
+      // 데이터를 처리하는 로직
+      setMovies(data.results);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
-    console.log(movies);
-  }, []);
+    fetchDataForPage(currentPage);
+  }, [currentPage]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -25,7 +44,11 @@ function Movies() {
             ))}
           </MovieCard>
         </AllMovies>
-        {/* <Pagination count={10} /> */}
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </Wrapper>
     </ThemeProvider>
   );
@@ -38,6 +61,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 60px;
+  margin-bottom: 40px;
 `;
 
 const PageTitle = styled.h1`
@@ -50,6 +74,7 @@ const PageTitle = styled.h1`
 
 const AllMovies = styled.div`
   margin-top: 50px;
+  margin-bottom: 15px;
 `;
 
 const MovieCard = styled.div`
