@@ -24,7 +24,7 @@ function Search() {
         <CategoryWrapper>
           <Button
             name={'영화'}
-            onClick={() => setCategory('movie')}
+            onClick={() => setCategory('영화')}
             fontSize={'20px'}
             padding={'12px 20px'}
             borderRadius={'10px'}
