@@ -62,7 +62,6 @@ export default DramaDetail;
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
   margin-top: 40px;
 `;
 

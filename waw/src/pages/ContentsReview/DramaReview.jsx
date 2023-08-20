@@ -12,9 +12,16 @@ function DramaReview() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DramaDetail onClick={onClickHeart} active={heartIsActive} />
+      <Wrapper>
+        <DramaDetail onClick={onClickHeart} active={heartIsActive} />
+      </Wrapper>
     </ThemeProvider>
   );
 }
 
 export default DramaReview;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
