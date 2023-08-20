@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
-import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import { SearchValueAtom } from '../recoil/SearchAtom';
 import { CategoryAtom } from '../recoil/CategoryAtom';
 import { MoviesDataAtom } from '../recoil/MoviesDataAtom';
 import { DramasDataAtom } from '../recoil/DramasDataAtom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import Contents from './Contents';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
@@ -24,23 +22,23 @@ function SearchBar() {
       // 각 페이지에 맞는 API 주소 생성
       const encodedValue = encodeURIComponent(value);
       const apiURL =
-        category === 'movie'
+        category === '영화'
           ? `https://api.themoviedb.org/3/search/movie?api_key=7a170163b1751c8516b4112e0a10f71d&query=${encodedValue}&include_adult=false&language=ko-KR&page=1&region=kr`
           : `https://api.themoviedb.org/3/search/tv?api_key=7a170163b1751c8516b4112e0a10f71d&query=${encodedValue}&include_adult=false&language=ko-KR&page=1`;
 
       const response = await fetch(apiURL);
       const data = await response.json();
 
-      category === 'movie' ? setMovies(data.results) : setDramas(data.results);
+      category === '영화' ? setMovies(data.results) : setDramas(data.results);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
   const showResults =
-    category === 'movie' ? movies.slice(0, 4) : dramas.slice(0, 4);
+    category === '영화' ? movies.slice(0, 4) : dramas.slice(0, 4);
   const showOnlyTitle =
-    category === 'movie' ? movies.slice(4, 8) : dramas.slice(4, 8);
+    category === '영화' ? movies.slice(4, 8) : dramas.slice(4, 8);
 
   const onClickSearchButton = () => {
     navigate('/search/results');
@@ -54,7 +52,7 @@ function SearchBar() {
     <ThemeProvider theme={theme}>
       <Wrapper>
         <SearchBarWrapper>
-          {category === 'movie' ? (
+          {category === '영화' ? (
             <StyledInput
               type="text"
               placeholder="영화의 제목을 검색해보세요"
@@ -73,9 +71,9 @@ function SearchBar() {
             onClick={onClickSearchButton}></SearchImg>
         </SearchBarWrapper>
         <ShowResultsWithImgWrapper>
-          {category === 'movie'
+          {category === '영화'
             ? showResults.map((result) => (
-                <ShowInfo key={result.id} to={`/${category}/${result.id}`}>
+                <ShowInfo key={result.id} to={`/movie/${result.id}`}>
                   <InfoImg src={API_IMG + result.poster_path}></InfoImg>
                   <InfoTitle>{result.title}</InfoTitle>
                 </ShowInfo>
@@ -88,7 +86,7 @@ function SearchBar() {
               ))}
         </ShowResultsWithImgWrapper>
         <ShowOnlyTitleWrapper>
-          {category === 'movie'
+          {category === '영화'
             ? showOnlyTitle.map((result) => (
                 <OnlyTitle key={result.id} to={`/movie/${result.id}`}>
                   {result.title}
@@ -104,10 +102,6 @@ function SearchBar() {
     </ThemeProvider>
   );
 }
-
-// SearchBar.propTypes = {
-//   category: PropTypes.string.isRequired,
-// };
 
 export default SearchBar;
 
