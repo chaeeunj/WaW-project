@@ -1,18 +1,37 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DramasDataAtom } from '../recoil/DramasDataAtom';
 import { useRecoilState } from 'recoil';
-// import { Pagination } from '@mui/material';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
 import Contents from '../components/Contents';
+import Pagination from '../components/Pagination';
 
 function Movies() {
   const [dramas, setDramas] = useRecoilState(DramasDataAtom);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 20;
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const fetchDataForPage = async (currentPage) => {
+    try {
+      // 각 페이지에 맞는 API 주소 생성
+      const apiURL = `https://api.themoviedb.org/3/tv/top_rated?api_key=7a170163b1751c8516b4112e0a10f71d&language=ko-KR&region=kr&page=${currentPage}`;
+      const response = await fetch(apiURL);
+      const data = await response.json();
+      // 데이터를 처리하는 로직
+      setDramas(data.results);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
-    console.log(dramas);
-  }, []);
+    fetchDataForPage(currentPage);
+  }, [currentPage]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -25,7 +44,11 @@ function Movies() {
             ))}
           </DramaCard>
         </AllDramas>
-        {/* <Pagination count={10} /> */}
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </Wrapper>
     </ThemeProvider>
   );
@@ -50,6 +73,7 @@ const PageTitle = styled.h1`
 
 const AllDramas = styled.div`
   margin-top: 50px;
+  margin-bottom: 15px;
 `;
 
 const DramaCard = styled.div`
