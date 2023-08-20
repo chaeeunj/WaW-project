@@ -4,16 +4,18 @@ import theme from '../styles/theme';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import { SearchValueAtom } from '../recoil/SearchAtom';
+import { CategoryAtom } from '../recoil/CategoryAtom';
 import { MoviesDataAtom } from '../recoil/MoviesDataAtom';
 import { DramasDataAtom } from '../recoil/DramasDataAtom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Contents from './Contents';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
-function SearchBar({ category }) {
+function SearchBar() {
   const [movies, setMovies] = useRecoilState(MoviesDataAtom);
   const [dramas, setDramas] = useRecoilState(DramasDataAtom);
+  const category = useRecoilValue(CategoryAtom);
   const [searchValue, setSearchValue] = useRecoilState(SearchValueAtom);
   const navigate = useNavigate();
 
@@ -103,9 +105,9 @@ function SearchBar({ category }) {
   );
 }
 
-SearchBar.propTypes = {
-  category: PropTypes.string.isRequired,
-};
+// SearchBar.propTypes = {
+//   category: PropTypes.string.isRequired,
+// };
 
 export default SearchBar;
 

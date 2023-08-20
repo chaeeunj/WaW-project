@@ -1,16 +1,16 @@
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchValueAtom } from '../../recoil/SearchAtom';
-import { useRecoilValue } from 'recoil';
+import { CategoryAtom } from '../../recoil/CategoryAtom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Buttons/Button';
 import TextButton from '../../components/Buttons/TextButton';
 
 function Search() {
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useRecoilState(CategoryAtom);
   const searchValue = useRecoilValue(SearchValueAtom);
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ function Search() {
             borderRadius={'10px'}
           />
         </CategoryWrapper>
-        <SearchBar category={category} />
+        <SearchBar />
         {searchValue && (
           <TextButtonWrapper>
             <TextButton
