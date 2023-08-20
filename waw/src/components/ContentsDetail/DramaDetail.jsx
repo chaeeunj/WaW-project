@@ -4,12 +4,10 @@ import { DramasDataAtom } from '../../recoil/DramasDataAtom';
 import { useRecoilValue } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
-import PropTypes from 'prop-types';
-import { Heart, HeartFill } from 'react-bootstrap-icons';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
-function DramaDetail({ onClick, active }) {
+function DramaDetail() {
   const { id } = useParams();
   const [drama, setDrama] = useState([]);
   const dramas = useRecoilValue(DramasDataAtom);
@@ -23,13 +21,6 @@ function DramaDetail({ onClick, active }) {
     <ThemeProvider theme={theme}>
       <Wrapper>
         <Poster src={API_IMG + drama.poster_path} alt={drama.name} />
-        {/* <HeartIcon onClick={onClick} />
-        <HeartFillIcon onClick={onClick} /> */}
-        {active ? (
-          <HeartFillIcon onClick={onClick} />
-        ) : (
-          <HeartIcon onClick={onClick} />
-        )}
         <Drama>
           <Title>{drama.name}</Title>
           <DramaInfo>
@@ -52,11 +43,6 @@ function DramaDetail({ onClick, active }) {
   );
 }
 
-DramaDetail.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  active: PropTypes.string.isRequired,
-};
-
 export default DramaDetail;
 
 const Wrapper = styled.div`
@@ -68,21 +54,6 @@ const Wrapper = styled.div`
 const Poster = styled.img`
   width: 240px;
   height: 320px;
-`;
-
-const HeartIcon = styled(Heart)`
-  color: red;
-  position: relative;
-  bottom: 145px;
-  left: 40px;
-  cursor: pointer;
-`;
-
-const HeartFillIcon = styled(HeartFill)`
-  color: red;
-  position: relative;
-  bottom: 145px;
-  left: 40px;
 `;
 
 const Drama = styled.div`
