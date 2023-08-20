@@ -48,7 +48,7 @@ const CardWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 30px 0;
+  margin: 20px 0;
 `;
 
 const ContentsCard = styled(Link)`
