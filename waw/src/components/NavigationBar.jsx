@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserDataAtom } from '../recoil/UserDataAtom';
 import { IsLoginAtom } from '../recoil/IsLoginAtom';
-import { auth } from '../services/login';
+import { auth } from '../services/firebase';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 
@@ -17,12 +17,11 @@ function NavigationBar() {
   const storedIsLogin = localStorage.getItem('isLogin');
   const storedUserName = localStorage.getItem('userName');
 
-  const user = auth.currentUser;
-  console.log(user);
-
   const onclickTextBtn = (page) => {
     navigate(page);
   };
+
+  useEffect(() => {}, [isLogin]);
 
   return (
     <ThemeProvider theme={theme}>
