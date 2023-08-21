@@ -39,11 +39,13 @@ function Login() {
       setUserData({
         name: name,
         email: email,
+        uid: user.uid,
       });
 
       await addDoc(collection(db, 'userAccount'), {
         name: name,
         email: email,
+        uid: user.uid,
       });
 
       setIsLogin(true);
@@ -84,11 +86,13 @@ function Login() {
           setUserData({
             name: userName,
             email: loginEmail,
+            uid: uid,
           });
 
           await addDoc(collection(db, 'userAccount'), {
             name: userName,
             email: loginEmail,
+            uid: uid,
           });
         }
       });
