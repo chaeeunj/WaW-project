@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { UserDataAtom } from '../recoil/UserDataAtom';
 import { IsLoginAtom } from '../recoil/IsLoginAtom';
-import { auth } from '../services/login';
+import { auth, db } from '../services/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -24,34 +25,35 @@ function Login() {
   const [loginPassword, setLoginPassword] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(isLogin);
-  }, [setIsLogin]);
+  useEffect(() => {}, [userData]);
 
-  const handleGoogleLogin = () => {
-    const provider = new GoogleAuthProvider(); // provider 구글 설정
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
 
-    signInWithPopup(auth, provider) // 팝업창 띄워서 로그인
-      .then((data) => {
-        const user = data.user;
-        const name = user.displayName;
-        const email = user.email;
-        const password = user.password;
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const name = user.displayName;
+      const email = user.email;
 
-        setUserData({
-          name: name,
-          email: email,
-          password: password,
-        });
-
-        setIsLogin(true);
-        localStorage.setItem('isLogin', isLogin);
-        localStorage.setItem('userName', userData.name);
-        navigate('/main');
-      })
-      .catch((err) => {
-        console.log(err);
+      setUserData({
+        name: name,
+        email: email,
       });
+
+      await addDoc(collection(db, 'userAccount'), {
+        name: name,
+        email: email,
+      });
+
+      setIsLogin(true);
+      localStorage.setItem('isLogin', true);
+      localStorage.setItem('userName', name);
+
+      navigate('/main');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const login = async () => {
@@ -61,6 +63,10 @@ function Login() {
         loginEmail,
         loginPassword
       );
+
+      setIsLogin(true);
+      localStorage.setItem('isLogin', true);
+      localStorage.setItem('userName', userCredential.user.displayName);
     } catch (error) {
       console.log(error.message);
     }
@@ -69,9 +75,8 @@ function Login() {
   const onclickLoginButton = async (page) => {
     try {
       await login();
-      setIsLogin(true);
 
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
           const uid = user.uid;
           const userName = user.displayName;
@@ -79,20 +84,18 @@ function Login() {
           setUserData({
             name: userName,
             email: loginEmail,
-            password: loginPassword,
           });
-        } else {
-          // User is signed out
-          // ...
+
+          await addDoc(collection(db, 'userAccount'), {
+            name: userName,
+            email: loginEmail,
+          });
         }
       });
-
-      console.log(userData);
     } catch (error) {
       console.log(error.message);
     }
-    localStorage.setItem('isLogin', isLogin);
-    localStorage.setItem('userName', userData.name);
+
     navigate(page);
   };
 
