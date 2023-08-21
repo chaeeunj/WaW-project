@@ -1,19 +1,40 @@
 import { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
+import { ReviewDataAtom } from '../../recoil/ReviewDataAtom';
+import { useRecoilValue } from 'recoil';
+import { auth, db } from '../../services/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+
 import DramaDetail from '../../components/ContentsDetail/DramaDetail';
+import Review from '../../components/Review';
+import Button from '../../components/Buttons/Button';
 
 function DramaReview() {
-  const [heartIsActive, setHeartIsActive] = useState(false);
+  const reviewData = useRecoilValue(ReviewDataAtom);
 
-  const onClickHeart = () => {
-    !setHeartIsActive;
+  const onclickSaveButton = async () => {
+    await addDoc(collection(db, 'userReview'), reviewData);
   };
+
+  useEffect(() => {}, [reviewData]);
 
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
-        <DramaDetail onClick={onClickHeart} active={heartIsActive} />
+        <DramaDetail />
+        <ButtonWrapper>
+          <Button
+            name={'저장'}
+            onClick={onclickSaveButton}
+            fontSize={'16px'}
+            padding={'10px 25px'}
+            borderRadius={'7px'}
+          />
+        </ButtonWrapper>
+        <ReviewWrapper>
+          <Review />
+        </ReviewWrapper>
       </Wrapper>
     </ThemeProvider>
   );
@@ -24,4 +45,17 @@ export default DramaReview;
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 30px;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  margin: 40px 0 0 730px;
+`;
+
+const ReviewWrapper = styled.div`
+  margin-top: 60px;
 `;
