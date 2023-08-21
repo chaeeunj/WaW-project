@@ -5,6 +5,6 @@ export const UserDataAtom = atom({
   default: {
     name: '',
     email: '',
-    password: '',
+    uid: '',
   },
 });
