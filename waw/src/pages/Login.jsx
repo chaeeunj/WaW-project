@@ -210,7 +210,9 @@ const UserInput = styled.div`
 `;
 
 const StyledInput = styled.input`
-  height: 25px;
+  height: 27px;
+  background-color: ${({ theme }) => theme.light_yellow};
+  border: none;
 `;
 
 const Line = styled.div`
