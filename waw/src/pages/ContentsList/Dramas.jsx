@@ -32,7 +32,6 @@ function Movies() {
   useEffect(() => {
     fetchDataForPage(currentPage);
   }, [currentPage]);
-  console.log(dramas);
 
   return (
     <ThemeProvider theme={theme}>
@@ -62,6 +61,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 60px;
+  margin-bottom: 40px;
 `;
 
 const PageTitle = styled.h1`
