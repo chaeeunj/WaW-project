@@ -1,27 +1,42 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { MoviesDataAtom, MovieIdAtom } from '../../recoil/MoviesDataAtom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
+import { auth, db } from '../../services/firebase';
+import { collection, doc, addDoc, deleteDoc } from 'firebase/firestore';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
 function MovieDetail() {
+  const user = auth.currentUser;
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const [liked, setLiked] = useState(false);
   const movies = useRecoilValue(MoviesDataAtom);
   const setMovieId = useSetRecoilState(MovieIdAtom);
 
-  const handleLikedIcon = () => {
+  const handleLikedIcon = async () => {
     setLiked(!liked);
   };
 
   useEffect(() => {
     setMovie(movies.find((movie) => movie.id === parseInt(id)));
     setMovieId(id);
-  }, [movie]);
+
+    if (liked) {
+      const userLikedMovie = {
+        userId: user.uid,
+        movieId: id,
+        movieName: movie.title,
+        moviePoster: movie.poster_path,
+      };
+      addDoc(collection(db, 'userLikedMovie'), userLikedMovie);
+    } else {
+      deleteDoc(doc(db, 'userLikedMovie', 'doc.id'));
+    }
+  }, [liked, user.uid, movie]);
 
   return (
     <ThemeProvider theme={theme}>

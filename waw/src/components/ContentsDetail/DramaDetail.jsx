@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { DramasDataAtom } from '../../recoil/DramasDataAtom';
 import { useRecoilValue } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
+import { auth, db } from '../../services/firebase';
+import { collection, doc, addDoc, deleteDoc } from 'firebase/firestore';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
 function DramaDetail() {
+  const user = auth.currentUser;
   const { id } = useParams();
   const [drama, setDrama] = useState([]);
   const [liked, setLiked] = useState(false);
@@ -19,8 +22,19 @@ function DramaDetail() {
 
   useEffect(() => {
     setDrama(dramas.find((drama) => drama.id === parseInt(id)));
-  }, [drama]);
-  console.log;
+
+    if (liked) {
+      const userLikedDrama = {
+        userId: user.uid,
+        dramaId: id,
+        dramaName: drama.name,
+        dramaPoster: drama.poster_path,
+      };
+      addDoc(collection(db, 'userLikedDrama'), userLikedDrama);
+    } else {
+      deleteDoc(doc(db, 'userLikedDrama', 'doc.id'));
+    }
+  }, [liked, user.uid, drama]);
 
   return (
     <ThemeProvider theme={theme}>
