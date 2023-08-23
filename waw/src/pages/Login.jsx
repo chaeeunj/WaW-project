@@ -71,6 +71,7 @@ function Login() {
       localStorage.setItem('userName', userCredential.user.displayName);
     } catch (error) {
       console.log(error.message);
+      alert('로그인 정보가 일치하지 않습니다.');
     }
   };
 
