@@ -37,11 +37,11 @@ function Join() {
       const user = userCredential.user;
       console.log(user);
 
-      setUserData({
-        name: name,
-        email: email,
-        password: password,
-      });
+      // setUserData({
+      //   name: name,
+      //   email: email,
+      //   password: password,
+      // });
 
       if (user) {
         await updateProfile(user, {
@@ -84,7 +84,7 @@ function Join() {
             />
             <StyledInput
               type="password"
-              placeholder="비밀번호"
+              placeholder="비밀번호(6자리 이상)"
               onChange={(e) => setPassword(e.target.value)}
             />
             <StyledInput
