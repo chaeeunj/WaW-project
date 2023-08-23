@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../styles/theme';
 import { auth } from '../services/firebase';
@@ -11,16 +12,38 @@ function UserInfoUpdate() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
+  const [passwordChanged, setPasswordChanged] = useState(false);
+  const [nameChanged, setNameChanged] = useState(false);
+  const navigate = useNavigate();
 
   const onclickSaveButton = async () => {
-    // try {
-    //   await updateProfile(user, {
-    //     displayName: name,
-    //   });
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    if (passwordChanged) {
+      try {
+        await updatePassword(user, password);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (nameChanged) {
+      try {
+        await updateProfile(user, {
+          displayName: name,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    alert('회원정보 수정이 완료되었습니다. 다시 로그인 후 이용 부탁드립니다.');
+    navigate('/mypage');
   };
+
+  useEffect(() => {
+    setPasswordChanged(password !== '');
+  }, [password]);
+
+  useEffect(() => {
+    setNameChanged(name !== '');
+  }, [name]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -29,16 +52,16 @@ function UserInfoUpdate() {
         <Line></Line>
         <UserInfoWrapper>
           <UserInput>
-            <StyledLabel for="name">이름</StyledLabel>
+            <StyledLabel htmlFor="name">이름</StyledLabel>
             <StyledInput
               name="name"
               type="text"
-              value={user.displayName}
+              defaultValue={user.displayName}
               onChange={(e) => setName(e.target.value)}
             />
           </UserInput>
           <UserInput>
-            <StyledLabel for="email">이메일</StyledLabel>
+            <StyledLabel htmlFor="email">이메일</StyledLabel>
             <StyledInput
               name="email"
               type="email"
@@ -47,7 +70,7 @@ function UserInfoUpdate() {
             />
           </UserInput>
           <UserInput>
-            <StyledLabel for="password">비밀번호</StyledLabel>
+            <StyledLabel htmlFor="password">비밀번호</StyledLabel>
             <StyledInput
               name="password"
               type="password"
@@ -55,7 +78,7 @@ function UserInfoUpdate() {
             />
           </UserInput>
           <UserInput>
-            <StyledLabel for="passwordCheck">비밀번호 확인</StyledLabel>
+            <StyledLabel htmlFor="passwordCheck">비밀번호 확인</StyledLabel>
             <StyledInput
               name="passwordCheck"
               type="password"
@@ -128,7 +151,7 @@ const Line = styled.div`
 `;
 
 const UserInfoWrapper = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 
 const UserInput = styled.div`
