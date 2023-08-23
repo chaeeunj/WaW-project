@@ -4,8 +4,9 @@ import theme from '../styles/theme';
 import { ReviewDataAtom } from '../recoil/ReviewDataAtom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { auth, db } from '../services/firebase';
+import PropTypes from 'prop-types';
 
-function Review() {
+function Review({ reviewHistory }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [review, setReview] = useState('');
@@ -40,7 +41,7 @@ function Review() {
     });
   }, [selectedFiles, imageUrls, review, quote]);
 
-  console.log(reviewData);
+  // console.log(reviewData);
 
   return (
     <ThemeProvider theme={theme}>
@@ -48,6 +49,7 @@ function Review() {
         <ReviewWrapper>
           <Title>감상평</Title>
           <ReviewInput
+            value={reviewHistory.review}
             onChange={(e) => setReview(e.target.value)}></ReviewInput>
         </ReviewWrapper>
         <SceneWrapper>
@@ -71,12 +73,18 @@ function Review() {
         </SceneWrapper>
         <QuoteWrapper>
           <Title>기억하고 싶은 대사</Title>
-          <QuoteInput onChange={(e) => setQuote(e.target.value)}></QuoteInput>
+          <QuoteInput
+            value={reviewHistory.quote}
+            onChange={(e) => setQuote(e.target.value)}></QuoteInput>
         </QuoteWrapper>
       </Wrapper>
     </ThemeProvider>
   );
 }
+
+Review.propTypes = {
+  reviewHistory: PropTypes.array.isRequired,
+};
 
 export default Review;
 
