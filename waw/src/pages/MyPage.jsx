@@ -7,7 +7,6 @@ import {
   signOut,
   deleteUser,
   reauthenticateWithCredential,
-  promptForCredentials,
 } from 'firebase/auth';
 import { UserDataAtom } from '../recoil/UserDataAtom';
 import { IsLoginAtom } from '../recoil/IsLoginAtom';
@@ -26,8 +25,8 @@ function MyPage() {
 
   const handleWithdrawal = async () => {
     try {
-      const credential = promptForCredentials();
-      await reauthenticateWithCredential(user, credential);
+      // const credential = promptForCredentials();
+      // await reauthenticateWithCredential(user, credential);
       await deleteUser(user);
       localStorage.removeItem('userName');
       localStorage.removeItem('isLogin');
@@ -93,14 +92,14 @@ function MyPage() {
           </li>
           <li>
             <TextButton
-              name={'시청한 TV 프로그램 모아보기'}
+              name={'다시 보고싶은 TV 프로그램'}
               onClick={() => onclickTextBtn('/mydrama')}
               fontSize={'20px'}
             />
           </li>
           <li>
             <TextButton
-              name={'시청한 영화 모아보기'}
+              name={'다시 보고싶은 영화'}
               onClick={() => onclickTextBtn('/mymovie')}
               fontSize={'20px'}
             />
