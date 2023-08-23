@@ -24,7 +24,7 @@ function Main() {
   const fetchMoviesData = async () => {
     try {
       const response = await fetch(
-        'https://api.themoviedb.org/3/movie/popular?api_key=7a170163b1751c8516b4112e0a10f71d&language=ko-KR&region=kr'
+        'https://api.themoviedb.org/3/movie/popular?api_key=7a170163b1751c8516b4112e0a10f71d&language=ko-KR&region=krhttps://api.themoviedb.org/3/movie/popular?api_key=7a170163b1751c8516b4112e0a10f71d&language=ko-KR&region=kr'
       );
       const jsonData = await response.json();
       setMovies(jsonData.results);
