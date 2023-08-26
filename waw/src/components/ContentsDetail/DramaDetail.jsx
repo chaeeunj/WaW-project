@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DramasDataAtom } from '../../recoil/DramasDataAtom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
 import { auth, db } from '../../services/firebase';
-import { collection, doc, addDoc, deleteDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  addDoc,
+  deleteDoc,
+  getDocs,
+} from 'firebase/firestore';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
@@ -14,25 +20,42 @@ function DramaDetail() {
   const { id } = useParams();
   const [drama, setDrama] = useState([]);
   const [liked, setLiked] = useState(false);
-  const dramas = useRecoilValue(DramasDataAtom);
+  const [dramas, setDramas] = useRecoilState(DramasDataAtom);
 
   const handleLikedIcon = () => {
     setLiked(!liked);
   };
 
+  const getLikedDramas = async () => {
+    try {
+      const userLikedDrama = await getDocs(collection(db, 'userLikedDrama'));
+      const likedDrama = userLikedDrama.docs.map((doc) => doc.data());
+      setDramas(likedDrama);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
-    setDrama(dramas.find((drama) => drama.id === parseInt(id)));
+    getLikedDramas().then(() => {
+      if (dramas) {
+        const foundDrama = dramas.find((drama) => drama.id === parseInt(id));
+        if (foundDrama) {
+          setDrama(foundDrama);
+        }
+      }
+    });
 
     if (liked) {
       const userLikedDrama = {
         userId: user.uid,
-        dramaId: id,
-        dramaName: drama.name,
-        dramaPoster: drama.poster_path,
+        id: id,
+        name: drama.name,
+        poster_path: drama.poster_path,
       };
       addDoc(collection(db, 'userLikedDrama'), userLikedDrama);
     } else {
-      deleteDoc(doc(db, 'userLikedDrama', 'doc.id'));
+      deleteDoc(doc(db, 'userLikedDrama', 'actualDocumentId'));
     }
   }, [liked, user.uid, drama]);
 

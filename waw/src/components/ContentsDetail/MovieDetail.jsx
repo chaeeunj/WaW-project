@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { MoviesDataAtom, MovieIdAtom } from '../../recoil/MoviesDataAtom';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { MoviesDataAtom } from '../../recoil/MoviesDataAtom';
+import { useSetRecoilState } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import theme from '../../styles/theme';
 import { auth, db } from '../../services/firebase';
-import { collection, doc, addDoc, deleteDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  addDoc,
+  deleteDoc,
+  getDocs,
+} from 'firebase/firestore';
 
 const API_IMG = 'https://image.tmdb.org/t/p/w500/';
 
@@ -14,27 +20,43 @@ function MovieDetail() {
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const [liked, setLiked] = useState(false);
-  const movies = useRecoilValue(MoviesDataAtom);
-  const setMovieId = useSetRecoilState(MovieIdAtom);
+  const [movies, setMovies] = useRecoilState(MoviesDataAtom);
 
   const handleLikedIcon = async () => {
     setLiked(!liked);
   };
 
+  const getLikedMovies = async () => {
+    try {
+      const userLikedMovie = await getDocs(collection(db, 'userLikedMovie'));
+      const likedMovie = userLikedMovie.docs.map((doc) => doc.data());
+      setMovies(likedMovie);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
-    setMovie(movies.find((movie) => movie.id === parseInt(id)));
-    setMovieId(id);
+    getLikedMovies();
+    getLikedMovies().then(() => {
+      if (movies) {
+        const foundMovie = movies.find((movie) => movie.id === parseInt(id));
+        if (foundMovie) {
+          setMovie(foundMovie);
+        }
+      }
+    });
 
     if (liked) {
       const userLikedMovie = {
         userId: user.uid,
-        movieId: id,
-        movieName: movie.title,
-        moviePoster: movie.poster_path,
+        id: id,
+        title: movie.title,
+        poster_path: movie.poster_path,
       };
       addDoc(collection(db, 'userLikedMovie'), userLikedMovie);
     } else {
-      deleteDoc(doc(db, 'userLikedMovie', 'doc.id'));
+      deleteDoc(doc(db, 'userLikedMovie', 'actualDocumentId'));
     }
   }, [liked, user.uid, movie]);
 

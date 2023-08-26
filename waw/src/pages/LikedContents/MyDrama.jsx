@@ -43,21 +43,16 @@ function MyDrama() {
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
-        <PageTitle>다시 보고싶은 영화</PageTitle>
+        <PageTitle>다시 보고싶은 TV 프로그램</PageTitle>
         <DramaContainer>
           <CardWrapper>
             {user &&
               dramasToShow.map(
                 (drama) =>
                   user.uid === drama.userId && (
-                    <ContentsCard
-                      to={`/drama/${drama.dramaId}`}
-                      key={drama.dramaId}>
-                      <Img
-                        src={API_IMG + drama.dramaPoster}
-                        alt={drama.dramaName}
-                      />
-                      <Title>{drama.dramaName}</Title>
+                    <ContentsCard to={`/drama/${drama.id}`} key={drama.id}>
+                      <Img src={API_IMG + drama.poster_path} alt={drama.name} />
+                      <Title>{drama.name}</Title>
                     </ContentsCard>
                   )
               )}

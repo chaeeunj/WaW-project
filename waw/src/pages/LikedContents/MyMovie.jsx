@@ -50,14 +50,12 @@ function MyMovie() {
               moviesToShow.map(
                 (movie) =>
                   user.uid === movie.userId && (
-                    <ContentsCard
-                      to={`/movie/${movie.movieId}`}
-                      key={movie.movieId}>
+                    <ContentsCard to={`/movie/${movie.id}`} key={movie.movieId}>
                       <Img
-                        src={API_IMG + movie.moviePoster}
-                        alt={movie.movieName}
+                        src={API_IMG + movie.poster_path}
+                        alt={movie.title}
                       />
-                      <Title>{movie.movieName}</Title>
+                      <Title>{movie.title}</Title>
                     </ContentsCard>
                   )
               )}
