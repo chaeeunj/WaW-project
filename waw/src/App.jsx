@@ -17,8 +17,6 @@ import UserInfoUpdate from './pages/UserInfoUpdate';
 import MyMovie from './pages/LikedContents/MyMovie';
 import MyDrama from './pages/LikedContents/MyDrama';
 
-import Test from './pages/Test';
-
 function App() {
   return (
     <>
@@ -26,7 +24,6 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
-          <Route path="/test" element={<Test />} />
           <Route path="/" element={<Start />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
